@@ -1,0 +1,15 @@
+version: "3"
+services:
+  server:
+    container_name: myapp-server
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "9001:9001"
+    networks:
+      - nestjs-network
+
+networks:
+  nestjs-network:
+    external: true
