@@ -29,6 +29,7 @@ export class ProductExistsRule implements ValidatorConstraintInterface {
 }
 
 export function ProductExists(validationOptions?: ValidationOptions): (object: any, propertyName: string) => void {
+    // eslint-disable-next-line func-names
     return function (object: any, propertyName: string): void {
         registerDecorator({
             name: 'ProductExists',

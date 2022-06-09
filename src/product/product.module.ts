@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { PrismaModule } from '../prisma/prisma.module';
 import { ProductService } from './product.service';
 import { ProductsController } from './productsController';
