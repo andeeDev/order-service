@@ -1,7 +1,10 @@
 ## Order service
 
 App responsible for creating orders and storing the products.
-Docker-compose.yml file set up all containers 
+Docker-compose.yml file set up all containers
+
+The service is created to proxy requests to the services
+>   ❗⚠️  **Should be started after the user-service.**
 
 ## Running the app
 
