@@ -5,6 +5,8 @@ export class ProductDto {
 
     price: number;
 
+    mainImg: string;
+
     photos: string[];
 
     category: string;

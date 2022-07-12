@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm i
 COPY . ./
+COPY prisma ./prisma/
 
 # Create prisma types
 RUN npx prisma generate

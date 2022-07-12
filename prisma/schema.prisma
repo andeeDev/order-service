@@ -12,6 +12,7 @@ model Product {
   title String
   description String
   price Float
+  mainImg String
   photos String[]
   category Category @relation(fields: [categoryId], references: [id])
   categoryId String @db.ObjectId

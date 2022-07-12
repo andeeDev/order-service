@@ -5,15 +5,21 @@ import winston from 'winston';
 import { ProductService } from './product/product.service';
 import { ProductModule } from './product/product.module';
 import { PrismaService } from './prisma/prisma.service';
-import { CategoryService } from './category/category.service';
-import { CategoriesController } from './category/categories.controller';
 import { OrderService } from './order/order.service';
 import { OrdersController } from './order/orders.controller';
 import { OrderModule } from './order/order.module';
+import { configuration } from './config/configuration';
+import { validationSchema } from './config/validation';
+import { CategoryModule } from './category/category.module';
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({
+            isGlobal: true,
+            load: [configuration],
+            validationSchema,
+            envFilePath: ['.env'],
+        }),
         ProductModule,
         OrderModule,
         WinstonModule.forRoot({
@@ -28,8 +34,9 @@ import { OrderModule } from './order/order.module';
                 }),
             ],
         }),
+        CategoryModule,
     ],
-    controllers: [CategoriesController, OrdersController],
-    providers: [ProductService, PrismaService, CategoryService, OrderService],
+    controllers: [OrdersController],
+    providers: [ProductService, PrismaService, OrderService],
 })
 export class AppModule {}
