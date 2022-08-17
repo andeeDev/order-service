@@ -23,6 +23,7 @@ model Category {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   title String @unique
   products Product[]
+  auctionProducts AuctionProduct[]
 }
 
 model Order {
@@ -40,4 +41,28 @@ model OrderProduct {
   productId String @db.ObjectId
   order Order @relation(fields: [orderId], references: [id])
   orderId String @db.ObjectId
+}
+
+model AuctionProduct {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String
+  startPrice Float
+  mainImg String
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId String @db.ObjectId
+  bids Bid[]
+  createdAt DateTime?  @default(now())
+  sellTil DateTime?
+  creatorId Int
+  buyerId Int?
+}
+
+model Bid {
+   id String @id @default(auto()) @map("_id") @db.ObjectId
+   price Float
+   userId Int
+   createdAt DateTime?  @default(now())
+   auctionProduct AuctionProduct @relation(fields: [auctionProductId], references: [id], onDelete: Cascade)
+   auctionProductId String @db.ObjectId
 }

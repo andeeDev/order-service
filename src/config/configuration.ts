@@ -1,5 +1,7 @@
-export const configuration: any = () => {
-    return {
+import { ConfigType, ConfigurationType } from './configType';
+
+export const configuration: ConfigurationType = () => {
+    return <ConfigType>{
         rabbitmq: {
             user: process.env.RABBIT_MQ_USER,
             password: process.env.RABBIT_MQ_PASSWORD,

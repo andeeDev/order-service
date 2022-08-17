@@ -1,20 +1,15 @@
 import { NestFactory } from '@nestjs/core';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { Transport } from '@nestjs/microservices';
-import { ConfigService } from '@nestjs/config';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { INestMicroservice } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { configuration } from './config/configuration';
 
 async function bootstrap(): Promise<void> {
-    const app: INestApplication = await NestFactory.create(AppModule);
-    const config: ConfigService = app.get<ConfigService>(ConfigService);
+    const { user, host, password, vhost } = configuration().rabbitmq;
 
-    const user: string = config.get('rabbitmq.user');
-    const password: string = config.get('rabbitmq.password');
-    const host: string = config.get('rabbitmq.host');
-    const vhost: string = config.get('rabbitmq.vhost');
     const rabbitMqConnectionString: string = `amqp://${user}:${password}@${host}/${vhost}`;
 
-    app.connectMicroservice({
+    const app: INestMicroservice = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
         transport: Transport.RMQ,
         options: {
             urls: [rabbitMqConnectionString],
@@ -27,13 +22,9 @@ async function bootstrap(): Promise<void> {
             prefetchCount: 1,
         },
     });
-    app.useGlobalPipes(
-        new ValidationPipe({
-            whitelist: true,
-        }),
-    );
 
-    await app.startAllMicroservices();
+    await app.listen();
 }
 
+/* eslint-disable unicorn/prefer-top-level-await */
 bootstrap();

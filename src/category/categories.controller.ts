@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { Category, Product } from '@prisma/client';
-import { CategoryService } from './category.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { CategoryService } from './category.service';
 
 @Controller('categories')
 export class CategoriesController {

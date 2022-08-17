@@ -11,6 +11,9 @@ import { OrderModule } from './order/order.module';
 import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation';
 import { CategoryModule } from './category/category.module';
+import { OnetimeProductsController } from './onetime-products/onetime-products.controller';
+import { OnetimeProductsModule } from './onetime-products/onetime-products.module';
+import { BidsModule } from './bids/bids.module';
 
 @Module({
     imports: [
@@ -35,8 +38,10 @@ import { CategoryModule } from './category/category.module';
             ],
         }),
         CategoryModule,
+        OnetimeProductsModule,
+        BidsModule,
     ],
-    controllers: [OrdersController],
+    controllers: [OrdersController, OnetimeProductsController],
     providers: [ProductService, PrismaService, OrderService],
 })
 export class AppModule {}
