@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { INestMicroservice } from '@nestjs/common';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AppModule } from './app.module';
 import { configuration } from './config/configuration';
+import { AllExceptionsFilter } from './utils/filters/AllExceptionFilter';
 
 async function bootstrap(): Promise<void> {
     const { user, host, password, vhost } = configuration().rabbitmq;
@@ -22,6 +24,8 @@ async function bootstrap(): Promise<void> {
             prefetchCount: 1,
         },
     });
+
+    app.useGlobalFilters(new AllExceptionsFilter(app.get(WINSTON_MODULE_NEST_PROVIDER)));
 
     await app.listen();
 }

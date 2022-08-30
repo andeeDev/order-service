@@ -6,13 +6,11 @@ import { ProductService } from './product/product.service';
 import { ProductModule } from './product/product.module';
 import { PrismaService } from './prisma/prisma.service';
 import { OrderService } from './order/order.service';
-import { OrdersController } from './order/orders.controller';
 import { OrderModule } from './order/order.module';
 import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation';
 import { CategoryModule } from './category/category.module';
-import { OnetimeProductsController } from './onetime-products/onetime-products.controller';
-import { OnetimeProductsModule } from './onetime-products/onetime-products.module';
+import { AuctionProductsModule } from './auction-products/auction-products.module';
 import { BidsModule } from './bids/bids.module';
 
 @Module({
@@ -38,10 +36,10 @@ import { BidsModule } from './bids/bids.module';
             ],
         }),
         CategoryModule,
-        OnetimeProductsModule,
+        AuctionProductsModule,
         BidsModule,
     ],
-    controllers: [OrdersController, OnetimeProductsController],
+    controllers: [],
     providers: [ProductService, PrismaService, OrderService],
 })
 export class AppModule {}

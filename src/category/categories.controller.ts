@@ -1,19 +1,19 @@
 import { Controller } from '@nestjs/common';
-import { Category, Product } from '@prisma/client';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CategoryService } from './category.service';
+import { GetAllCategoriesRes, ProductsByCategoryRes } from '../utils/types/returnTypes';
 
 @Controller('categories')
 export class CategoriesController {
     constructor(private categoryService: CategoryService) {}
 
     @MessagePattern('categories')
-    getAllCategories(): Promise<Category[]> {
+    getAllCategories(): Promise<GetAllCategoriesRes> {
         return this.categoryService.getAll();
     }
 
     @MessagePattern('categoryProduct')
-    getProductsByCategory(@Payload() payload): Promise<Product[]> {
+    getProductsByCategory(@Payload() payload): Promise<ProductsByCategoryRes> {
         return this.categoryService.getProductsByCategory(payload.id);
     }
 }

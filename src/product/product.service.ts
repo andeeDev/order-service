@@ -1,72 +1,144 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Category, Product } from '@prisma/client';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { PrismaService } from '../prisma/prisma.service';
-import { RemoteExceptionHelper } from '../utils/helpers/RemoteExceptionHelper';
+import { ExceptionHandler } from '../utils/helpers/RemoteExceptionHelper';
 import { ProductDto } from './dto/ProductDto';
+import { AppLogger } from '../utils/helpers/CustomLogger';
+import { ProductErrorTypes } from '../utils/messages/errors/ErrorTypes';
+import { ProductSuccessTypes } from '../utils/messages/success/SuccessTypes';
+import { genericSuccessResponse } from '../utils/types/DefaultSuccessResponse';
+import {
+    CreateProductRes,
+    DeleteProductRes,
+    GenericResponse,
+    GetAllProductsRes,
+    GetOneProductRes,
+    UpdateProductRes,
+} from '../utils/types/returnTypes';
 
 @Injectable()
 export class ProductService {
     constructor(
         private readonly prismaService: PrismaService,
         @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
-    ) {}
+    ) {
+    }
 
-    get(): Promise<Product[]> {
+    async get(): Promise<GetAllProductsRes> {
         try {
-            return this.prismaService.product.findMany({
+            const products: Product[] = await this.prismaService.product.findMany({
                 include: {
                     category: true,
                 },
             });
+
+            AppLogger.logInfo(this.logger, { type: ProductSuccessTypes.FetchAllProductsSuccess });
+
+            return {
+                ...genericSuccessResponse,
+                payload: products,
+            };
         } catch (error: unknown) {
-            return RemoteExceptionHelper.handleRemoteError(this.logger, error);
+            return ExceptionHandler.handleError(error, ProductErrorTypes.FetchAllProductsError);
         }
     }
 
-    async findOne(id: string): Promise<Product> {
-        const product: Product = await this.prismaService.product.findUnique({
-            where: { id },
-        });
+    async findOne(id: string): Promise<GetOneProductRes> {
+        try {
+            const product: Product = await this.prismaService.product.findUnique({
+                where: { id },
+            });
 
-        if (!product) throw new BadRequestException('Product not found');
+            if (!product)
+                return <GenericResponse>{
+                    status: HttpStatus.BAD_REQUEST,
+                    message: 'Product not found',
+                };
 
-        return product;
+            AppLogger.logInfo(this.logger, { type: ProductSuccessTypes.FetchOneProductsSuccess });
+
+            return {
+                ...genericSuccessResponse,
+                payload: product,
+            };
+        } catch (error: unknown) {
+            return ExceptionHandler.handleError(error, ProductErrorTypes.FetchOneProductsError);
+        }
     }
 
-    async create(data: ProductDto): Promise<Product> {
-        return this.prismaService.product.create({
-            data: {
-                ...data,
-                category: {
-                    connectOrCreate: {
-                        where: { title: data.category },
-                        create: { title: data.category },
+    async create(data: ProductDto): Promise<CreateProductRes> {
+        try {
+            const product: Product = await this.prismaService.product.create({
+                data: {
+                    ...data,
+                    category: {
+                        connectOrCreate: {
+                            where: { title: data.category },
+                            create: { title: data.category },
+                        },
                     },
                 },
-            },
-        });
+            });
+
+            AppLogger.logInfo(this.logger, { type: ProductSuccessTypes.CreateProductsSuccess });
+
+            return {
+                ...genericSuccessResponse,
+                payload: product,
+            };
+        } catch (error: unknown) {
+            return ExceptionHandler.handleError(error, ProductErrorTypes.CreateProductsError);
+        }
     }
 
-    async update(id: string, data: ProductDto): Promise<Product> {
-        const { category: categoryTitle, ...restData } = data;
-        const category: Category = await this.prismaService.category.findUnique({ where: { title: categoryTitle } });
+    async update(id: string, data: ProductDto): Promise<UpdateProductRes> {
+        try {
+            const { category: categoryTitle, ...restData } = data;
+            const category: Category = await this.prismaService.category.findUnique({ where: { title: categoryTitle } });
 
-        if (!category) throw new BadRequestException('Model not found');
+            if (!category) {
+                return <GenericResponse>{
+                    status: HttpStatus.BAD_REQUEST,
+                    message: 'Model not found',
+                };
+            }
 
-        return this.prismaService.product.update({
-            where: { id },
-            data: {
-                ...restData,
-                categoryId: category.id,
-            },
-        });
+            const product: Product = await this.prismaService.product.update({
+                where: { id },
+                data: {
+                    ...restData,
+                    categoryId: category.id,
+                },
+            });
+
+            AppLogger.logInfo(this.logger, { type: ProductSuccessTypes.UpdateProductsSuccess });
+
+            return {
+                ...genericSuccessResponse,
+                payload: product,
+            };
+        } catch
+            (error: unknown) {
+            return ExceptionHandler.handleError(error, ProductErrorTypes.UpdateProductsError);
+        }
     }
 
-    delete(id: string): Promise<Product> {
-        return this.prismaService.product.delete({
-            where: { id },
-        });
+    async delete(id: string): Promise<DeleteProductRes> {
+        try {
+            const product: Product = await this.prismaService.product.delete({
+                where: { id },
+            });
+
+            AppLogger.logInfo(this.logger, { type: ProductSuccessTypes.DeleteProductsSuccess });
+
+            return {
+                ...genericSuccessResponse,
+                payload: product,
+            };
+        } catch (error: unknown) {
+            return ExceptionHandler.handleError(error, ProductErrorTypes.DeleteProductsError);
+        }
     }
 }

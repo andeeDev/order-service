@@ -1,4 +1,4 @@
-export interface DeleteOrder {
+export interface DeleteOrderDto {
     userId: number;
     orderId: string;
 }
