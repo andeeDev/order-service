@@ -35,6 +35,6 @@ const ErrorCombined: any = {
     ...AuctionProductsErrorTypes,
     ...BidsErrorTypes,
     ...ProductErrorTypes,
-}
+};
 
 export type ErrorType = typeof ErrorCombined;

@@ -2,7 +2,7 @@ import { SuccessType } from '../messages/success/SuccessTypes';
 import { ErrorType } from '../messages/errors/ErrorTypes';
 
 export type SuccessLoggerTypes = {
-    type: SuccessType
+    type: SuccessType;
 };
 
 export type ErrorLoggerTypes = {

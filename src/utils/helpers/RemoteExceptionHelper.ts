@@ -41,5 +41,5 @@ export const ExceptionHandler: any = {
             message,
         });
         throw new AppError(HttpStatus.INTERNAL_SERVER_ERROR, message);
-    }
-}
+    },
+};

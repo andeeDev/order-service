@@ -4,4 +4,3 @@ export * from './order';
 export * from './auctionProduct';
 export * from './category';
 export * from './product';
-

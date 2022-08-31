@@ -29,7 +29,7 @@ const SuccessCombined: any = {
     ...AuctionProductsSuccessTypes,
     ...CategorySuccessTypes,
     ...OrderSuccessTypes,
-    ...ProductSuccessTypes
-}
+    ...ProductSuccessTypes,
+};
 
 export type SuccessType = typeof SuccessCombined;

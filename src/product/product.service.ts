@@ -23,8 +23,7 @@ export class ProductService {
     constructor(
         private readonly prismaService: PrismaService,
         @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
-    ) {
-    }
+    ) {}
 
     async get(): Promise<GetAllProductsRes> {
         try {
@@ -96,7 +95,9 @@ export class ProductService {
     async update(id: string, data: ProductDto): Promise<UpdateProductRes> {
         try {
             const { category: categoryTitle, ...restData } = data;
-            const category: Category = await this.prismaService.category.findUnique({ where: { title: categoryTitle } });
+            const category: Category = await this.prismaService.category.findUnique({
+                where: { title: categoryTitle },
+            });
 
             if (!category) {
                 return <GenericResponse>{
@@ -119,8 +120,7 @@ export class ProductService {
                 ...genericSuccessResponse,
                 payload: product,
             };
-        } catch
-            (error: unknown) {
+        } catch (error: unknown) {
             return ExceptionHandler.handleError(error, ProductErrorTypes.UpdateProductsError);
         }
     }
