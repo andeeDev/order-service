@@ -32,7 +32,7 @@ export class BidsService {
                 payload: bids,
             };
         } catch (error: unknown) {
-            return ExceptionHandler.handleError(error, BidsErrorTypes.BidsCreateError);
+            return ExceptionHandler.handleError(error, BidsErrorTypes.BidsFetchAllError);
         }
     }
 

@@ -8,6 +8,8 @@ The service is created to proxy requests to the services
 
 ## Running the app
 
+Before you should create MongoDB atlas database.
+
 To set up the app create env file 
 ```dotenv
 DATABASE_URL= # mongo atlas url
