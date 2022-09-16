@@ -9,7 +9,3 @@ export type ErrorLoggerTypes = {
     type: ErrorType;
     message: string;
 };
-
-export interface LogInfoMessage {
-    type: SuccessLoggerTypes;
-}
