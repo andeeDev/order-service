@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  order-service:
+    container_name: order-service
+    image: order-service:1.0.0
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: build
+    command: npm run start:debug
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - nestjs-network
+
+networks:
+  nestjs-network:
+    external: true
